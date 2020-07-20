@@ -3,16 +3,15 @@ const app = express();
 const fs = require('fs');
 const port = 80;
 const pdftk = require('node-pdftk');
+const path = require('path');
 
 const cors = require('cors')({
     origin: true
 });
 
-
-
 app.get('/pdf', function (req, res) {
     pdftk
-        .input(__dirname + '/orig/test.pdf')
+        .input(path.resolve(__dirname, 'orig/test.pdf'))
         .fillForm({
             "1-AV#*": 'my av id!!'
         })
@@ -20,9 +19,10 @@ app.get('/pdf', function (req, res) {
         .output()
         .then(buffer => {
             console.log('buf: ', buffer);
-            fs.writeFile(__dirname + '/out/written.pdf', buffer, function (err) {
+            fs.writeFile(path.resolve(__dirname, 'out/written.pdf'), buffer, function (err) {
                 if (err) return console.log(err);
-                res.sendFile(__dirname + '/out/written.pdf');
+                console.log('written!');
+                res.sendFile(path.resolve(__dirname, 'out/written.pdf'));
             });
         })
         .catch(err => {

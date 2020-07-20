@@ -10,7 +10,7 @@ const cors = require('cors')({
 
 app.get('/pdf', function (req, res) {
     pdftk
-        .input('./test.pdf')
+        .input('./orig/test.pdf')
         .fillForm({
             "1-AV#*": 'my av id!!'
         })
@@ -18,9 +18,9 @@ app.get('/pdf', function (req, res) {
         .output()
         .then(buffer => {
             console.log('buf: ', buffer);
-            fs.writeFile('./written.pdf', buffer, function (err) {
+            fs.writeFile('./out/written.pdf', buffer, function (err) {
                 if (err) return console.log(err);
-                res.sendFile('./written.pdf');
+                res.sendFile('./out/written.pdf');
             });
         })
         .catch(err => {

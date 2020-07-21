@@ -41,6 +41,7 @@ app.post('/pdf', type, function (req, res) {
         console.log('Unauthorized request.');
         res.status(401).send('Unauthorized request.');
     } else {
+        console.log('[ Received processed PDF. ]');
         let fields = JSON.parse(req.body.fields);
         pdftk
             .input(req.file.path)
@@ -52,6 +53,7 @@ app.post('/pdf', type, function (req, res) {
                         console.log('Delete error: ', deleteError);
                         res.status(500).send('Delete Error');
                     } else {
+                        console.log('[ Sending processed PDF. ]');
                         res.status(200).send(buffer);
                     }
                 });

@@ -26,7 +26,7 @@ const cors = require('cors')({
 });
 
 app.use(function (req, res, next) {
-    let allowedOrigins = ['http://localhost:8080'];
+    let allowedOrigins = ['http://localhost:8080', 'https://transmetrics-plus-staging.web.app'];
     let origin = req.headers.origin;
     if (allowedOrigins.indexOf(origin) > -1) {
         res.setHeader('Access-Control-Allow-Origin', origin);

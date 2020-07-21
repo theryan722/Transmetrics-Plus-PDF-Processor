@@ -66,7 +66,7 @@ app.post('/pdf', type, function (req, res) {
 });
 
 
-fs.readFile('/opt/bitnami/apache2/conf/privkey.pem', function read(err, key) {
+fs.readFile('/opt/bitnami/apache2/conf/transmetricspdfprocessor.engagewhiz.com.key', function read(err, key) {
     if (err) {
         throw err;
     }

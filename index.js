@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const https = require('https');
 const app = express();
 const port = 80;
 const pdftk = require('node-pdftk');
@@ -64,4 +65,23 @@ app.post('/pdf', type, function (req, res) {
     }
 });
 
-app.listen(port, () => console.log(`Transmetrics Plus PDF Process Running. Listening on port: ${port}`));
+const {key, cert} = await (async () => {
+    fs.readFile('/opt/bitnami/apache2/conf/privkey.pem', function read(err, key) {
+        if (err) {
+            throw err;
+        }
+        fs.readFile('/opt/bitnami/apache2/conf/transmetricspdfprocessor.engagewhiz.com.crt', function read(err, cert) {
+            if (err) {
+                throw err;
+            }
+            return {
+                key: key,
+                cert: cert
+            };
+        });
+    });
+})();
+
+const httpsServer = https.createServer({key, cert}, app).listen(443);
+
+//app.listen(port, () => console.log(`Transmetrics Plus PDF Process Running. Listening on port: ${port}`));

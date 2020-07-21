@@ -4,7 +4,6 @@ const app = express();
 const port = 3000;
 const pdftk = require('node-pdftk');
 const multer = require('multer');
-const toBuffer = require('blob-to-buffer');
 const fs = require('fs');
 const authID = 'YR26t5GAKDzErOgI33xIUgLsHdXdVX4S';
 

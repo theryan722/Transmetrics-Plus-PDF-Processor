@@ -9,7 +9,6 @@
   "author": "Ryan O'Day",
   "license": "ISC",
   "dependencies": {
-    "blob-to-buffer": "^1.2.8",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

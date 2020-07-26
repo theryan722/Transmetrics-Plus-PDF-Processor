@@ -66,11 +66,11 @@ app.post('/pdf', type, function (req, res) {
 });
 
 
-fs.readFile('/opt/bitnami/apache2/conf/transmetricspdfprocessor.engagewhiz.com.key', function read(err, key) {
+fs.readFile('/opt/bitnami/apache2/conf/pdfprocessor.transmetricsplus.com.key', function read(err, key) {
     if (err) {
         throw err;
     }
-    fs.readFile('/opt/bitnami/apache2/conf/transmetricspdfprocessor.engagewhiz.com.crt', function read(err, cert) {
+    fs.readFile('/opt/bitnami/apache2/conf/pdfprocessor.transmetricsplus.com.crt', function read(err, cert) {
         if (err) {
             throw err;
         }

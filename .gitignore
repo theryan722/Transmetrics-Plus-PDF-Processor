@@ -104,3 +104,4 @@ dist
 .tern-port
 uploads
 .DS_Store
+.vscode/settings.json

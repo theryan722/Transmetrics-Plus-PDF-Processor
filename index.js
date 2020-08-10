@@ -43,40 +43,29 @@ app.post('/pdf', type, function (req, res) {
         res.status(401).send('Unauthorized request.');
     } else {
         console.log('[ Received processed PDF. ]');
-        fs.access(req.file.path, fs.F_OK, (err) => {
-            if (err) {
-                console.log('check error: ', err);
-            } else {
-                console.log('EXISTS!!!!: ', req.file.path);
-            }
-            setTimeout(function () {
-                let fields = JSON.parse(req.body.fields);
-                pdftk
-                    .input(req.file.path)
-                    .fillForm(fields)
-                    .flatten()
-                    .output().then(buffer => {
+        let fields = JSON.parse(req.body.fields);
+        pdftk
+            .input(req.file.path)
+            .fillForm(fields)
+            .flatten()
+            .output().then(buffer => {
+                console.log('[ Sending processed PDF. ]');
+                res.status(200).send(buffer);
+                /* fs.unlink(req.file.path, (deleteError) => {
+                    if (deleteError) {
+                        console.log('Delete error: ', deleteError);
+                        res.status(500).send('Delete Error');
+                    } else {
                         console.log('[ Sending processed PDF. ]');
                         res.status(200).send(buffer);
-                        /* fs.unlink(req.file.path, (deleteError) => {
-                            if (deleteError) {
-                                console.log('Delete error: ', deleteError);
-                                res.status(500).send('Delete Error');
-                            } else {
-                                console.log('[ Sending processed PDF. ]');
-                                res.status(200).send(buffer);
-                            }
-                        }); */
-                    }).catch(pdfError => {
-                        console.log('file path: ', req.file.path);
-                        console.log('PDFTK Error: ', pdfError);
-                        res.status(500).send('PDFTK Error');
-                    });
-
-            }, 2000);
-
-        });
-
+                    }
+                }); */
+            }).catch(pdfError => {
+                console.log('file path: ', req.file.path);
+                console.log('fields: ', fields);
+                console.log('PDFTK Error: ', pdfError);
+                res.status(500).send('PDFTK Error');
+            });
     }
 });
 

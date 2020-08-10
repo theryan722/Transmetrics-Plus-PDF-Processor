@@ -62,7 +62,14 @@ app.post('/pdf', type, function (req, res) {
                     }
                 }); */
             }).catch(pdfError => {
-                console.log('file path: ', req.file.path);
+                console.log('reading file path: ', req.file.path);
+                fs.readFile(req.file.path, function read(err, key) {
+                    if (err) {
+                        console.log('eeeerrr: ', err);
+                    }
+                    console.log('read: ', key)
+                });
+                
                 console.log('PDFTK Error: ', pdfError);
                 res.status(500).send('PDFTK Error');
             });

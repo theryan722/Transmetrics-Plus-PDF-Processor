@@ -37,6 +37,7 @@ app.use(function (req, res, next) {
 });
 
 app.post('/pdf', type, function (req, res) {
+
     //This is not a serious api key/auth system, just intended as a simple/fast line of defense
     if (!req.body.authid || req.body.authid !== authID) {
         console.log('Unauthorized request.');
@@ -49,9 +50,7 @@ app.post('/pdf', type, function (req, res) {
             .fillForm(fields)
             .flatten()
             .output().then(buffer => {
-                console.log('[ Sending processed PDF. ]');
-                res.status(200).send(buffer);
-                /* fs.unlink(req.file.path, (deleteError) => {
+                fs.unlink(req.file.path, (deleteError) => {
                     if (deleteError) {
                         console.log('Delete error: ', deleteError);
                         res.status(500).send('Delete Error');
@@ -59,12 +58,12 @@ app.post('/pdf', type, function (req, res) {
                         console.log('[ Sending processed PDF. ]');
                         res.status(200).send(buffer);
                     }
-                }); */
+                });
             }).catch(pdfError => {
-                console.log('file path: ', req.file.path);
-                console.log('fields: ', fields);
                 console.log('PDFTK Error: ', pdfError);
-                res.status(500).send('PDFTK Error');
+                res.status(200).send({
+                    tryagain: req.body.studentid
+                });
             });
     }
 });

@@ -49,7 +49,9 @@ app.post('/pdf', type, function (req, res) {
             .fillForm(fields)
             .flatten()
             .output().then(buffer => {
-                fs.unlink(req.file.path, (deleteError) => {
+                console.log('[ Sending processed PDF. ]');
+                res.status(200).send(buffer);
+                /* fs.unlink(req.file.path, (deleteError) => {
                     if (deleteError) {
                         console.log('Delete error: ', deleteError);
                         res.status(500).send('Delete Error');
@@ -57,8 +59,9 @@ app.post('/pdf', type, function (req, res) {
                         console.log('[ Sending processed PDF. ]');
                         res.status(200).send(buffer);
                     }
-                });
+                }); */
             }).catch(pdfError => {
+                console.log('file path: ', req.file.path);
                 console.log('PDFTK Error: ', pdfError);
                 res.status(500).send('PDFTK Error');
             });

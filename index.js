@@ -61,9 +61,7 @@ app.post('/pdf', type, function (req, res) {
                 });
             }).catch(pdfError => {
                 console.log('PDFTK Error: ', pdfError);
-                res.status(200).send({
-                    tryagain: req.body.studentid
-                });
+                res.status(500).send('PDFTK Error: ', pdfError);
             });
     }
 });

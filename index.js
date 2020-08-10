@@ -49,31 +49,34 @@ app.post('/pdf', type, function (req, res) {
             } else {
                 console.log('EXISTS!!!!: ', req.file.path);
             }
-            let fields = JSON.parse(req.body.fields);
-            pdftk
-                .input(req.file.path)
-                .fillForm(fields)
-                .flatten()
-                .output().then(buffer => {
-                    console.log('[ Sending processed PDF. ]');
-                    res.status(200).send(buffer);
-                    /* fs.unlink(req.file.path, (deleteError) => {
-                        if (deleteError) {
-                            console.log('Delete error: ', deleteError);
-                            res.status(500).send('Delete Error');
-                        } else {
-                            console.log('[ Sending processed PDF. ]');
-                            res.status(200).send(buffer);
-                        }
-                    }); */
-                }).catch(pdfError => {
-                    console.log('file path: ', req.file.path);
-                    console.log('PDFTK Error: ', pdfError);
-                    res.status(500).send('PDFTK Error');
-                });
+            setTimeout(function () {
+                let fields = JSON.parse(req.body.fields);
+                pdftk
+                    .input(req.file.path)
+                    .fillForm(fields)
+                    .flatten()
+                    .output().then(buffer => {
+                        console.log('[ Sending processed PDF. ]');
+                        res.status(200).send(buffer);
+                        /* fs.unlink(req.file.path, (deleteError) => {
+                            if (deleteError) {
+                                console.log('Delete error: ', deleteError);
+                                res.status(500).send('Delete Error');
+                            } else {
+                                console.log('[ Sending processed PDF. ]');
+                                res.status(200).send(buffer);
+                            }
+                        }); */
+                    }).catch(pdfError => {
+                        console.log('file path: ', req.file.path);
+                        console.log('PDFTK Error: ', pdfError);
+                        res.status(500).send('PDFTK Error');
+                    });
+
+            }, 2000);
 
         });
-       
+
     }
 });
 

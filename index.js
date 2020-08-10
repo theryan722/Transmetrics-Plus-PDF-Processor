@@ -45,7 +45,7 @@ app.post('/pdf', type, function (req, res) {
         console.log('[ Received processed PDF. ]');
         fs.access(req.file.path, fs.F_OK, (err) => {
             if (err) {
-                console.error('check error: ', err);
+                console.log('check error: ', err);
             } else {
                 console.log('EXISTS!!!!: ', req.file.path);
             }

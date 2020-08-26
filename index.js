@@ -84,7 +84,7 @@ app.post('/pdfmerge', type, function (req, res) {
         let pdftkInput = {};
         let pdftkCat = '';
         Promise.all(promiseList).then(function (downloadedPDFS) {
-            console.log('downloaded pdfs: ', downloadedPDFS);
+            
             downloadedPDFS.forEach(function (downloadedPDF) {
                 pdftkInput[downloadedPDF.id] = downloadedPDF.fileLoc;
                 pdftkCat += downloadedPDF.id + ' ';
@@ -104,7 +104,9 @@ app.post('/pdfmerge', type, function (req, res) {
                     });
                 }).catch(pdfError => {
                     console.log('PDFTK Error: ', pdfError);
-                    res.status(500).send('PDFTK Error: ' + pdfError);
+                    console.log('sending log of pdfs: ', downloadedPDFS);
+                    res.status(200).send(downloadedPDFS);
+                    //res.status(500).send('PDFTK Error: ' + pdfError);
                 });
         });
     }

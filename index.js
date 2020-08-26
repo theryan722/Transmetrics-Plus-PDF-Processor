@@ -76,7 +76,7 @@ app.post('/pdfmerge', type, function (req, res) {
         res.status(401).send('Unauthorized request.');
     } else {
         console.log('[ Received PDF URLS. ]');
-        let filesToDownload = req.body.filestomerge;
+        let filesToDownload = JSON.parse(req.body.filestomerge);
         console.log(filesToDownload);
         let promiseList = [];
         for (let i in filesToDownload) {

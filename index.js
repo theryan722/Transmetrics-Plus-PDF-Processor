@@ -99,14 +99,12 @@ app.post('/pdfmerge', type, function (req, res) {
                         console.log('[ Sending merged PDF. ]');
                         res.status(200).send(buffer);
                     }).catch(function (error) {
-                        console.log('DError deleting downloaded PDFs to merge: ', error);
+                        console.log('Error deleting downloaded PDFs to merge: ', error);
                         res.status(500).send('Delete Error');
                     });
                 }).catch(pdfError => {
                     console.log('PDFTK Error: ', pdfError);
-                    console.log('sending log of pdfs: ', downloadedPDFS);
-                    res.status(200).send(downloadedPDFS);
-                    //res.status(500).send('PDFTK Error: ' + pdfError);
+                    res.status(500).send('PDFTK Error: ' + pdfError);
                 });
         });
     }

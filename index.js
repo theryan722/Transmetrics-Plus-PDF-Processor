@@ -66,11 +66,6 @@ app.post('/pdf', type, function (req, res) {
     }
 });
 
-function getRandomShortDelay() {
-    let min = 1;
-    let max = 3;
-    return Math.floor(Math.random() * (max - min + 1) + min) * 1000;
-}
 
 fs.readFile('/opt/bitnami/apache2/conf/pdfprocessor.transmetricsplus.com.key', function read(err, key) {
     if (err) {

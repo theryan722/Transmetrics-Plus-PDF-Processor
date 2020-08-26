@@ -8,6 +8,8 @@ const multer = require('multer');
 const fs = require('fs');
 const authID = 'YR26t5GAKDzErOgI33xIUgLsHdXdVX4S';
 
+const mergePDFDownloadLocation = __dirname + '/downloadedmerge';
+
 app.use(bodyParser.json({
     extended: true,
     limit: 1024 * 1024 * 10
@@ -66,6 +68,49 @@ app.post('/pdf', type, function (req, res) {
     }
 });
 
+app.post('/pdfmerge', type, function (req, res) {
+
+    //This is not a serious api key/auth system, just intended as a simple/fast line of defense
+    if (!req.body.authid || req.body.authid !== authID) {
+        console.log('Unauthorized request.');
+        res.status(401).send('Unauthorized request.');
+    } else {
+        console.log('[ Received PDF URLS. ]');
+        let filesToDownload = req.body.filestomerge;
+        console.log(filesToDownload);
+        let promiseList = [];
+        for (let i in filesToDownload) {
+            promiseList.push(downloadPDFAndGetMergeInfo(filesToDownload[i]));
+        }
+        let pdftkInput = {};
+        let pdftkCat = '';
+        Promise.all(promiseList).then(function (downloadedPDFS) {
+            console.log('promise resolved');
+            downloadedPDFS.forEach(function (downloadedPDF) {
+                pdftkInput[downloadedPDF.id] = downloadedPDF.fileLoc;
+                pdftkCat += downloadedPDF.id + ' ';
+            });
+            pdftkCat.trim();
+            //The input file key names that are also supplied to cat() must only be capital letters A-Z. No mixing of numbers/lower case letters.
+            pdftk
+                .input(pdftkInput)
+                .cat(pdftkCat)
+                .output().then(buffer => {
+                    deleteDownloadedPDFSToMerge(downloadedPDFS).then(function () {
+                        console.log('[ Sending merged PDF. ]');
+                        res.status(200).send(buffer);
+                    }).catch(function (error) {
+                        console.log('DError deleting downloaded PDFs to merge: ', error);
+                        res.status(500).send('Delete Error');
+                    })
+                }).catch(pdfError => {
+                    console.log('PDFTK Error: ', pdfError);
+                    res.status(500).send('PDFTK Error: ' + pdfError);
+                });
+        });
+    }
+});
+
 
 fs.readFile('/opt/bitnami/apache2/conf/pdfprocessor.transmetricsplus.com.key', function read(err, key) {
     if (err) {
@@ -82,6 +127,60 @@ fs.readFile('/opt/bitnami/apache2/conf/pdfprocessor.transmetricsplus.com.key', f
     });
 });
 
+function deleteDownloadedPDFSToMerge(downloadedPDFS) {
+    return new Promise(function (resolve, reject) {
+        let promiseList = [];
+        downloadedPDFS.forEach(function (downloadedPDF) {
+            promiseList.push(deleteFile(downloadedPDF.fileLoc));
+        });
+        Promise.all(promiseList).then(function () {
+            resolve();
+        }).catch(function (error) {
+            reject(error);
+        });
+    });
 
+}
+
+function deleteFile(fileLoc) {
+    return new Promise(function (resolve, reject) {
+        fs.unlink(fileLoc, (deleteError) => {
+            if (deleteError) {
+                reject(deleteError);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+function downloadPDFAndGetMergeInfo(url) {
+    return new Promise(function (resolve, reject) {
+        let fileID = generateID();
+        let fileLoc = mergePDFDownloadLocation + '/' + fileID + '.pdf';
+        const newFile = fs.createWriteStream(fileLoc);
+        const request = https.get(url, function (response) {
+            response.pipe(newFile);
+        });
+        newFile.on('finish', function () {
+            newFile.close();
+            resolve({
+                id: fileID,
+                fileLoc: fileLoc
+            })
+        });
+    });
+}
+
+function generateID() {
+    let length = 40;
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 //app.listen(port, () => console.log(`Transmetrics Plus PDF Process Running. Listening on port: ${port}`));

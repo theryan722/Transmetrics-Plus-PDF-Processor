@@ -45,7 +45,7 @@ app.post('/pdf', type, function (req, res) {
         console.log('Unauthorized request.');
         res.status(401).send('Unauthorized request.');
     } else {
-        console.log('[ Received processed PDF. ]');
+        console.log('[ /pdf: Received processed PDF. ]');
         let fields = JSON.parse(req.body.fields);
         pdftk
             .input(req.file.path)
@@ -75,9 +75,8 @@ app.post('/pdfmerge', type, function (req, res) {
         console.log('Unauthorized request.');
         res.status(401).send('Unauthorized request.');
     } else {
-        console.log('[ Received PDF URLS. ]');
+        console.log('[ /pdfmerge: Received PDF URLS. ]');
         let filesToDownload = JSON.parse(req.body.filestomerge);
-        console.log(filesToDownload);
         let promiseList = [];
         for (let i in filesToDownload) {
             promiseList.push(downloadPDFAndGetMergeInfo(filesToDownload[i]));
@@ -85,7 +84,6 @@ app.post('/pdfmerge', type, function (req, res) {
         let pdftkInput = {};
         let pdftkCat = '';
         Promise.all(promiseList).then(function (downloadedPDFS) {
-            console.log('promise resolved');
             downloadedPDFS.forEach(function (downloadedPDF) {
                 pdftkInput[downloadedPDF.id] = downloadedPDF.fileLoc;
                 pdftkCat += downloadedPDF.id + ' ';

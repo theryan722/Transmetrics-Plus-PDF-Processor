@@ -84,6 +84,7 @@ app.post('/pdfmerge', type, function (req, res) {
         let pdftkInput = {};
         let pdftkCat = '';
         Promise.all(promiseList).then(function (downloadedPDFS) {
+            console.log('downloaded pdfs: ', downloadedPDFS);
             downloadedPDFS.forEach(function (downloadedPDF) {
                 pdftkInput[downloadedPDF.id] = downloadedPDF.fileLoc;
                 pdftkCat += downloadedPDF.id + ' ';
@@ -100,7 +101,7 @@ app.post('/pdfmerge', type, function (req, res) {
                     }).catch(function (error) {
                         console.log('DError deleting downloaded PDFs to merge: ', error);
                         res.status(500).send('Delete Error');
-                    })
+                    });
                 }).catch(pdfError => {
                     console.log('PDFTK Error: ', pdfError);
                     res.status(500).send('PDFTK Error: ' + pdfError);
@@ -164,8 +165,9 @@ function downloadPDFAndGetMergeInfo(url) {
             newFile.close();
             resolve({
                 id: fileID,
-                fileLoc: fileLoc
-            })
+                fileLoc: fileLoc,
+                url: url
+            });
         });
     });
 }

@@ -18,3 +18,7 @@ Will run on port 443
 Locate the process ids by running: ps -ef | grep "node"
 
 Then: "sudo kill" the process that is "/opt/bitnami/nodejs/bin/.node.bin index"
+
+# To update
+Run:
+sudo git pull origin master

@@ -89,8 +89,6 @@ app.post('/pdfmerge', type, function (req, res) {
                 pdftkCat += downloadedPDF.id + ' ';
             });
             pdftkCat.trim();
-            console.log('input: ', pdftkInput);
-            console.log('cat: ', pdftkCat);
             //The input file key names that are also supplied to cat() must only be capital letters A-Z. No mixing of numbers/lower case letters.
             pdftk
                 .input(pdftkInput)

@@ -28,6 +28,7 @@ const cors = require('cors')({
     origin: true
 });
 
+/*
 app.use(function (req, res, next) {
     let allowedOrigins = ['http://localhost:8080', 'https://transmetrics-plus-staging.web.app', 'https://test.transmetricsplus.com', 'https://transmetricsplus.com', 'https://www.transmetricsplus.com'];
     let origin = req.headers.origin;
@@ -35,6 +36,15 @@ app.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+*/
+
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 

@@ -93,6 +93,7 @@ app.post('/pdfmerge', type, function (req, res) {
         }
         let pdftkInput = {};
         let pdftkCat = '';
+        console.log('cat: ', pdftkCat);
         Promise.all(promiseList).then(function (downloadedPDFS) {
             downloadedPDFS.forEach(function (downloadedPDF) {
                 pdftkInput[downloadedPDF.id] = downloadedPDF.fileLoc;

@@ -22,3 +22,6 @@ Then: "sudo kill" the process that is "/opt/bitnami/nodejs/bin/.node.bin index"
 # To update
 Run:
 sudo git pull origin master
+
+# For generating SSL for localhost
+https://stackoverflow.com/questions/21397809/create-a-trusted-self-signed-ssl-cert-for-localhost-for-use-with-express-node
